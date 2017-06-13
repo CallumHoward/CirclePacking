@@ -65,7 +65,7 @@ void CirclePackingApp::mouseDown(MouseEvent event) {
 
 void CirclePackingApp::mouseDrag(MouseEvent event) {
     const vec2 pos = event.getPos();
-    offset_ += lastPos_ - pos;
+    offset_ += (lastPos_ - pos) / zoom_;
     lastPos_ = pos;
 }
 
@@ -87,13 +87,13 @@ void CirclePackingApp::draw() {
     gl::clear(Color{0, 0, 0});
     gl::pushModelMatrix();
 
-    // move origin to the center of the window
-    gl::translate(+(getWindowCenter()));
+    // move origin to the center of the window for zooming
+    gl::translate(+getWindowCenter());
     gl::scale(zoom_, zoom_);
-    gl::translate(-(getWindowCenter()));
+    gl::translate(-getWindowCenter());
 
     // apply translational offset
-    gl::translate(-(offset_ / zoom_));
+    gl::translate(-offset_);
 
     gl::drawStrokedCircle(getWindowCenter(), 1);
     gl::drawStrokedCircle(getWindowCenter() + (offset_), 3);
@@ -105,7 +105,7 @@ void CirclePackingApp::draw() {
     }
 
     gl::popModelMatrix();
-    params_.draw();
+    //params_.draw();
 }
 
 CINDER_APP( CirclePackingApp, RendererGl )
